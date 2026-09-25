@@ -2,8 +2,17 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AuthPage from "./features/auth/AuthPage";
 import TodosPage from "./features/todos/TodosPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchCurrentUser } from "./features/auth/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
