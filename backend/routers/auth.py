@@ -26,8 +26,8 @@ async def register_user(user_data: UserCreate, response: Response):
             key="access_token",
             value=access_token,
             httponly=True,
-            samesite="lax",
-            secure=False,  # Set to True in production
+            samesite="none" if settings.ENVIRONMENT == "production" else "lax",
+            secure=True if settings.ENVIRONMENT == "production" else False,
             max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60  # in seconds
         )
 
@@ -51,8 +51,8 @@ async def login_user(user_data: UserCreate, response: Response):
             key="access_token",
             value=access_token,
             httponly=True,
-            samesite="lax",
-            secure=False,  # Set to True in production
+            samesite="none" if settings.ENVIRONMENT == "production" else "lax",
+            secure=True if settings.ENVIRONMENT == "production" else False,
             max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60  # in seconds
         )
         return UserOut(**user)
@@ -64,8 +64,8 @@ async def logout_user(response: Response):
         key="access_token",
         value="",
         httponly=True,
-        samesite="lax",
-        secure=False,  # Set to True in production
+        samesite="none" if settings.ENVIRONMENT == "production" else "lax",
+        secure=True if settings.ENVIRONMENT == "production" else False,
         max_age=0
     )
     return {"message": "Logged out successfully"}
