@@ -3,8 +3,20 @@
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
+import os
 
 config = context.config
+
+# Read DATABASE_URL from environment variable
+database_url = os.getenv(
+    "DATABASE_URL", "postgresql://postgres:password@localhost:5432/todoapp")
+
+# Render uses postgres:// but SQLAlchemy needs postgresql://
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+config.set_main_option("sqlalchemy.url", database_url)
+
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
